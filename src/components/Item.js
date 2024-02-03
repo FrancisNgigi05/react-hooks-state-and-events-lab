@@ -1,20 +1,40 @@
 import React, { useState } from "react";
+import Item from "./Item";
 
-function Item({ name, category }) {
+function ShoppingList({ items }) {
+  const [selectedCategory, setSelectedCategory] = useState("All")
 
-  const [inCart, setIsInCart] = useState(false);
-
-  function handleButtonClick() {
-    setIsInCart((prevState) => !prevState);
+  const sortCategory = (event) => {
+    setSelectedCategory(event.target.value);
   }
 
+  const itemsSelected = items.filter((item) => {
+    if (selectedCategory === "All") {
+      return (true);
+    }
+
+    else {
+      return(item.category === selectedCategory);
+    }
+  })
+
   return (
-    <li className={inCart ? "in-cart" : ""}>
-      <span>{name}</span>
-      <span className="category">{category}</span>
-      <button className={inCart ? "remove" : "add"} onClick={handleButtonClick}>{ inCart ? "Remove from" : "Add to"} Cart</button>
-    </li>
+    <div className="ShoppingList">
+      <div className="Filter">
+        <select name="filter" onChange={sortCategory}>
+          <option value="All">Filter by category</option>
+          <option value="Produce">Produce</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Dessert">Dessert</option>
+        </select>
+      </div>
+      <ul className="Items">
+        {itemsSelected.map((item) => (
+          <Item key={item.id} name={item.name} category={item.category} />
+        ))}
+      </ul>
+    </div>
   );
 }
 
-export default Item;
+export default ShoppingList;
